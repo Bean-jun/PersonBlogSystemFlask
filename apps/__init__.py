@@ -1,7 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from conf.settings import ConfigMap
-from apps.blog import home_blueprint
 
 # 创建数据库db
 db = SQLAlchemy()
@@ -23,6 +22,7 @@ def create_app(config):
     db.init_app(app=app)
 
     # 导入blog蓝图
+    from apps.blog import home_blueprint  # fix: 修复循导入问题
     app.register_blueprint(home_blueprint, url_prefix="")
 
     return app

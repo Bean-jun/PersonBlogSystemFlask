@@ -11,6 +11,13 @@
         .navbar {
             border-radius: 0;
         }
+        .container .footer{
+            text-align: center;
+
+        }
+        .container .footer a{
+            line-height: 35px;
+        }
     </style>
 
     {% block css %}
@@ -20,8 +27,9 @@
 </head>
 <body>
 
+{% block head %}
 <nav class="navbar navbar-inverse">
-    <div class="container-fluid">
+    <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
                     data-target="#bs-example-navbar-collapse-9" aria-expanded="false">
@@ -42,8 +50,22 @@
         </div>
     </div>
 </nav>
+{% endblock %}
 
 {% block content %} 内容 {% endblock %}
+
+{% block footer %}
+
+<nav class="navbar navbar-inverse navbar-fixed-bottom">
+    <div class="container">
+        <div class="footer">
+            <img src="{{ url_for('static', filename='images/icp.png') }}" alt="备案徽章">
+            <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2021007126号</a>
+        </div>
+    </div>
+</nav>
+
+{% endblock %}
 
 <script type="application/javascript" src="{{ url_for('static', filename='js/jquery-3.6.0.js') }}"></script>
 <script type="application/javascript" src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
