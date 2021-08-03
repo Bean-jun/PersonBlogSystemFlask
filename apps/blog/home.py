@@ -19,5 +19,10 @@ class IndexView(MethodView):
         return render_template('index.html', **context)
 
 
-# 首页视图
-home_blueprint.add_url_rule('/', view_func=IndexView.as_view(name='index'))
+class DetailView(MethodView):
+    """详细视图"""
+
+    def get(self, id):
+        note = Note.query.filter_by(id=id).first()
+
+        return render_template("detail.html", note=note)

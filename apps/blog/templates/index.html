@@ -43,7 +43,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading title" fid="{{ note.id }}">
                         <h3 class="panel-title"><a
-                                href="#">{{ note.title }}</a></h3>
+                                href="{{ url_for('blog.detail', id=note.id) }}">{{ note.title }}</a></h3>
                         <br/>
 
                     </div>
