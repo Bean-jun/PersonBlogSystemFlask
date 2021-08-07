@@ -1,6 +1,8 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+
 from conf.settings import ConfigMap
+from middleware.auth import auth
 
 # 创建数据库db
 db = SQLAlchemy()
@@ -20,6 +22,10 @@ def create_app(config):
 
     # 初始化db
     db.init_app(app=app)
+
+    # 创建请求中间件
+    app.before_request(auth)
+
 
     # 导入blog蓝图
     from apps.blog import home_blueprint  # fix: 修复循导入问题
