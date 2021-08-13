@@ -1,6 +1,10 @@
 """
 项目配置文件
 """
+try:
+    from blog_secret_key import *
+except Exception as e:
+    pass
 
 
 class Config(object):
@@ -10,6 +14,9 @@ class Config(object):
     SECRET_KEY = 'abc'
     SQLALCHEMY_DATABASE_URI = 'sqlite:///../db.sqlite3'
     SQLALCHEMY_TRACK_MODIFICATIONS = True
+
+    # 管理员
+    SUPER_USER = ADMIN_ACCOUNT
 
 
 class DevelopConfig(Config):
