@@ -7,6 +7,7 @@ from apps import db
 
 
 class LoginView(MethodView):
+    """用户登录"""
     def get(self):
         return render_template("login.html")
 
@@ -34,6 +35,7 @@ class LoginView(MethodView):
 
 
 class RegisterView(MethodView):
+    """用户注册"""
     def get(self):
         return render_template("register.html")
 
@@ -71,3 +73,10 @@ class RegisterView(MethodView):
 
         session['id'] = user.id
         return redirect(url_for("blog.index"))
+
+
+class LogoutView(MethodView):
+    """用户退出"""
+    def get(self):
+        session.clear()
+        return redirect(url_for('blog.index'))

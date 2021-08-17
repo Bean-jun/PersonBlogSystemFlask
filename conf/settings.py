@@ -17,6 +17,8 @@ class Config(object):
 
     # 管理员
     SUPER_USER = ADMIN_ACCOUNT
+    # 白名单-所有用户可以访问
+    WHITE_LIST = ["", "login", "register", "detail"]
 
 
 class DevelopConfig(Config):
