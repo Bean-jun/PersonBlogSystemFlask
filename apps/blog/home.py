@@ -1,7 +1,6 @@
 from flask.views import MethodView
 from flask import render_template
 from apps.models import Note, UserInfo
-from apps.blog import home_blueprint
 
 
 class IndexView(MethodView):
@@ -26,3 +25,10 @@ class DetailView(MethodView):
         note = Note.query.filter_by(id=id).first()
 
         return render_template("detail.html", note=note)
+
+
+class ProfileView(MethodView):
+    """个人视图"""
+
+    def get(self):
+        return render_template("profile.html")

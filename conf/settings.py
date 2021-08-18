@@ -19,6 +19,10 @@ class Config(object):
     SUPER_USER = ADMIN_ACCOUNT
     # 白名单-所有用户可以访问
     WHITE_LIST = ["", "login", "register", "detail"]
+    # 头像目录
+    UPLOAD_FOLDER = "apps/blog/static/asset"
+    # 默认注册默认头像
+    USER_LOGO = "asset/685b7e29-7daa-44de-a5f4-a1f39d1f969f.png"
 
 
 class DevelopConfig(Config):
