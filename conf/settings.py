@@ -24,6 +24,9 @@ class Config(object):
     # 默认注册默认头像
     USER_LOGO = "asset/685b7e29-7daa-44de-a5f4-a1f39d1f969f.png"
 
+    # top_image目录
+    TOP_IMAGE_UPLOAD_FOLDER = "apps/blog/static/asset/top_image"
+
 
 class DevelopConfig(Config):
     '''开发环境'''
