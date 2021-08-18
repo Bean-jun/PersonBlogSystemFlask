@@ -90,6 +90,18 @@
             $('#categoryForm')[0].reset();
         });
         // 提交分类表单
+        $("#category").click(function () {
+            $.ajax({
+                url:"{{ url_for('blog.addcategory') }}",
+                type:'POST',
+                data: $("#categoryForm").serialize()
+            }).done(function (data){
+                alert(data.content)
+                location.reload()
+            }).fail(function (){
+                console.log("网络连接错误~");
+            })
+        })
 
 
         // 处理密码问题
@@ -234,9 +246,9 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {% for item in userComment %}
+                    {% for item in comment %}
                     <tr>
-                        <td><a href="#"
+                        <td><a href="{{ url_for('blog.detail', id=item.note.id) }}"
                                style="text-decoration: none;color: black">
                             {{ item.note.title }}
                         </a></td>
@@ -306,11 +318,9 @@
                 </div>
                 <div class="modal-body">
                     <form id="categoryForm">
-
-
                         <div class="form-group">
-
-                            <span class="error-msg"></span>
+                            <label for="user-category">添加分类</label>
+                            <input type="text" class="form-control" id="user-category" placeholder="添加分类" name="category">
                         </div>
 
                     </form>

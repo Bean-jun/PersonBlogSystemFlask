@@ -17,3 +17,4 @@ home_blueprint.add_url_rule('/logout/', view_func=account.LogoutView.as_view(nam
 home_blueprint.add_url_rule('/register/', view_func=account.RegisterView.as_view(name='register'))
 home_blueprint.add_url_rule('/profile/userlogo/', view_func=account.ModifyLogo.as_view(name='userlogo'))
 home_blueprint.add_url_rule('/profile/userpwd/', view_func=account.ModifyPassWdView.as_view(name='userpwd'))
+home_blueprint.add_url_rule('/profile/addcategory/', view_func=account.AddCategory.as_view(name='addcategory'))

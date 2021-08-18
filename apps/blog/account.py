@@ -3,7 +3,7 @@ import uuid
 from flask import request, redirect, url_for, session, flash
 from flask import render_template, jsonify
 from flask.views import MethodView
-from apps.models import UserInfo
+from apps.models import UserInfo, Category
 from flask import current_app
 from apps import db
 
@@ -149,3 +149,19 @@ class ModifyPassWdView(MethodView):
         session.clear()
 
         return jsonify({"msg": True, "content": "修改密码成功~"})
+
+
+class AddCategory(MethodView):
+    """添加博客分类"""
+    def post(self):
+        r = request.form.get("category", None)
+        if not r:
+            return jsonify({"msg": False})
+
+        category = Category(user=request.user,
+                            name=r)
+
+        db.session.add(category)
+        db.session.commit()
+
+        return jsonify({"msg": True, "content": "添加成功~"})

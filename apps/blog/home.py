@@ -1,6 +1,6 @@
 from flask.views import MethodView
-from flask import render_template
-from apps.models import Note, UserInfo
+from flask import render_template, request
+from apps.models import Note, UserInfo, UserComment, Category
 
 
 class IndexView(MethodView):
@@ -31,4 +31,10 @@ class ProfileView(MethodView):
     """个人视图"""
 
     def get(self):
-        return render_template("profile.html")
+        comment = UserComment.query.filter_by(user=request.user).all()
+        category = Category.query.filter_by(user=request.user).all()
+        context = {
+            "comment": comment,
+            'category': category
+        }
+        return render_template("profile.html", **context)
