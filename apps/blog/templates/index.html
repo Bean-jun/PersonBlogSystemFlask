@@ -13,13 +13,13 @@
             {# 个人简介#}
             <table class="table">
                 <tr>
-                    <a href="#">
+                    <a href="{{ url_for('blog.profile') }}">
                         <img style="height: 254px;
                                 width: 254px;
                                 margin-top: 10px;
                                 margin-bottom: 45px;
                                 border-radius: 50%;"
-                             src="https://tse2-mm.cn.bing.net/th/id/OIP-C.UJn6UIedh0fIZk5V4f_5zgHaE8?pid=ImgDet&rs=1"
+                             src="{{ url_for('static', filename=user.image) }}"
                              alt="头像"/>
                     </a>
                 </tr>

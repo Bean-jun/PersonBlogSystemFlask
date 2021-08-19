@@ -53,7 +53,7 @@ class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey("userinfo.id"))
     name = db.Column(db.String(32), nullable=False)
-    repos_slug = db.Column(db.String(32), nullable=False)  # 语雀知识库slug
+    repos_slug = db.Column(db.String(32))  # 语雀知识库slug
     create_datetime = db.Column(db.DATETIME, default=datetime.now)
 
     note = db.relationship('Note', backref="category")  # 用户的评论
