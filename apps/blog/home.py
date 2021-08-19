@@ -117,9 +117,19 @@ class EditView(MethodView):
 
 
 class DeleteNoteView(MethodView):
+    """删除博客文章"""
+
     def get(self, id):
         note = Note.query.filter_by(id=id).first()
         db.session.delete(note)
         db.session.commit()
 
         return redirect(url_for('blog.edit'))
+
+
+class NoteListView(MethodView):
+    """博客分类列表"""
+
+    def get(self, id):
+        notes = Note.query.filter_by(category_id=id).all()
+        return render_template("category_list.html", notes=notes)

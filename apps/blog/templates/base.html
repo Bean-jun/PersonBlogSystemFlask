@@ -54,7 +54,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">  <!--修复下拉显示-->
             <ul class="nav navbar-nav navbar-left">
                 {% for item in category_navigate() %}
-                <li><a href="#">{{ item.name|title }}</a></li>
+                <li><a href="{{ url_for('blog.note_list', id=item.id) }}">{{ item.name|title }}</a></li>
                 {% endfor %}
             </ul>
 
@@ -69,7 +69,7 @@
                              alt="头像">&nbsp;&nbsp;
                         {{ request.user.username }} <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="#">添加文章</a></li>
+                        <li><a href="{{ url_for('blog.edit') }}">添加文章</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="{{ url_for('blog.profile') }}">个人中心</a></li>
                         <li role="separator" class="divider"></li>
