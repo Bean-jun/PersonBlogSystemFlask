@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='plugin/editor-md/css/editormd.min.css') }}">
+<style>
+    #editor {
+        z-index: 999;
+    }
+
+    .error-msg {
+        color: red;
+        font-size: 12px;
+        position: absolute;
+    }
+
+    #btnSubmit {
+        position: absolute;
+        top: -48px;
+    }
+
+    .panel-head {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .panel-body {
+        padding: 0;
+    }
+
+    .category-list {
+        border-right: 1px solid #bbbaba;
+        min-height: 500px;
+        padding: 0;
+        position: relative;
+    }
+
+    .content {
+        border-left: 1px solid #bbbaba;
+        min-height: 600px;
+    }
+
+    body > div.container > div.panel.panel-default > div > div.col-sm-3.hidden-xs.category-list > ul {
+        width: 100%;
+    }
+
+    /*
+    处理文件上传按钮
+    */
+    .image-btn {
+        display: flex;
+        position: relative;
+        overflow: hidden;
+    }
+
+    input[name=top_image] {
+        position: absolute;
+        left: 0;
+        top: 0;
+        overflow: hidden;
+        width: 108px;
+        height: 34px;
+        opacity: 0;
+    }
+</style>
+{% endblock css %}
+
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="panel panel-default" style="margin-bottom: 100px">
+            <div class="panel-heading panel-head">
+                <h4> 博客编辑&&修改页</h4>
+                <span>
+                <a type="button" class="btn btn-success" href="{{ url_for('blog.edit') }}">
+                    <i class="fa fa-edit" aria-hidden="true"></i> 编辑
+                </a>
+            </span>
+            </div>
+            <div class="panel-body">
+                <div class="col-sm-3 hidden-xs category-list">
+                    <ul class="list-group">
+                        {% for item in category_list %}
+                        <li class="list-group-item">
+                            <span class="badge">
+                                <a href="{{ url_for('blog.edit') }}?editor_category_list={{ item.id }}"
+                                   style="color: white;text-decoration: none;">{{ item.count }}</a>
+                            </span>
+                            <a href="#">{{ item.name|title }}</a>
+                        </li>
+                        {% endfor %}
+
+                    </ul>
+                </div>
+                <div class="col-sm-9 content">
+                    {% if notes %}
+                    <ul class="list-group">
+                        {% for item in notes %}
+                        <li class="list-group-item">
+                                <span class="badge">
+                                    <a href="{{ url_for('blog.note_delete', id=item.id) }}"
+                                       style="color: white;text-decoration: none;">
+                                         删 除
+                                    </a>
+                                </span>
+
+                            <a href="#"
+                               style="color: #222020;text-decoration: none;">
+                                {{ item.title }}
+                            </a>
+                            <span style="float: right;padding-right: 20px">
+                                    {{ item.create_datetime }}
+                                </span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <form class="form-horizontal" method="post" enctype="multipart/form-data" novalidate="">
+                        <div class="form-group">
+                            <input type="text" name="title" maxlength="32" minlength="1" class="form-control"
+                                   placeholder="请输入" required="" id="id_title">
+                            <span class="error-msg"></span>
+                        </div>
+                        <div class="form-group">
+                            <div id="editor" class="editormd editormd-vertical" style="width: 100%; height: 600px;">
+                                <textarea name="content" cols="40" rows="10" minlength="5"
+                                          class="form-control editormd-markdown-textarea" placeholder="请输入内容"
+                                          required="" id="id_content"></textarea>
+                                <a href="javascript:;" class="fa fa-close editormd-preview-close-btn"></a>
+
+                                <div class="editormd-preview">
+                                    <div class="markdown-body editormd-preview-container"></div>
+                                </div>
+                                <div class="editormd-container-mask" style="display:block;"></div>
+                                <div class="editormd-mask"></div>
+                            </div>
+                            <span class="error-msg"></span>
+                        </div>
+                        <div class="form-group">
+                            <select name="category" class="form-control" placeholder="请输入笔记分类" required=""
+                                    id="id_category">
+                                <option value="" selected="">请选择文章分类</option>
+                                {% for item in category %}
+                                <option value="{{ item.id }}">{{ item.name }}</option>
+                                {% endfor %}
+                            </select>
+                            <span class="error-msg"></span>
+                        </div>
+                        <div class="form-group">
+                            <div class="image-btn">
+                                <button class="btn btn-default"><i class="fa fa-upload" aria-hidden="true"></i>
+                                    上传首页图片
+                                </button>
+                                <input type="file" name="top_image" accept="image/*" required="" id="id_top_image">
+                            </div>
+                            <span class="error-msg"></span>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-10 col-sm-2">
+                                <button id="btnSubmit" class="btn btn-success center-block">提交</button>
+                            </div>
+                        </div>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block js %}
+<script src="{{ url_for('static', filename='plugin/editor-md/editormd.js') }}"></script>
+<script type="text/javascript">
+
+
+    $(function () {
+        initEditorMd();
+    })
+
+    // Markdown编辑器的初始化
+    function initEditorMd() {
+        editormd('editor', {
+            placeholder: "请输入内容",
+            height: 600,
+            emoji: true,
+            path: "{{ url_for('static', filename='plugin/editor-md/lib/') }}",
+
+            // 配置Markdown支持文件上传
+            imageUpload: true,
+            imageFormats: ["jpg", 'jpeg', 'png', 'gif'],
+        })
+    }
+
+</script>
+{% endblock %}
