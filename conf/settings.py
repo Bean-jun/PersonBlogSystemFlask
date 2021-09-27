@@ -27,6 +27,9 @@ class Config(object):
     # top_image目录
     TOP_IMAGE_UPLOAD_FOLDER = "apps/blog/static/asset/top_image"
 
+    # token 过期时间 (单位：秒)
+    TOKEN_EXP = 60 * 60
+
 
 class DevelopConfig(Config):
     '''开发环境'''
