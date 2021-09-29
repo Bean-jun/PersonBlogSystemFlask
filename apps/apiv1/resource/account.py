@@ -7,7 +7,7 @@ from sqlalchemy import or_
 from apps import db
 from apps.apiv1.common.response import response
 from apps.apiv1.resource.Base import BaseView
-from apps.models import UserInfo
+from apps.models import UserInfo, Category
 
 
 class RegisterView(BaseView):
@@ -111,3 +111,65 @@ class ModifyPassWord(BaseView):
             username=user.username,
             email=user.email
         )})
+
+
+class AddCategory(BaseView):
+
+    @BaseView.auth
+    def post(self, *args, **kwargs):
+
+        try:
+            email = kwargs.get("token_data").get("data").get("email")
+        except Exception as e:
+            print(e.args)
+            return response(400, "服务器内部异常")
+
+        if email not in current_app.config.get("SUPER_USER"):
+            return response(400, "非管理员账号请勿操作")
+
+        try:
+            _ = json.loads(request.get_data())
+            category = _.get('category')
+        except JSONDecodeError:
+            return response(400, "数据格式异常")
+
+        exist = Category.query.filter_by(name=category).first()
+        if exist:
+            return response(400, "请勿重复添加")
+
+        user = UserInfo.query.filter_by(email=email).first()
+
+        category = Category(user_id=user.id,
+                            name=category)
+
+        db.session.add(category)
+        db.session.commit()
+
+        return response(200, "添加成功", {"categoryId": category.id, "category": category.name})
+
+    @BaseView.auth
+    def delete(self, *args, **kwargs):
+
+        try:
+            email = kwargs.get("token_data").get("data").get("email")
+        except Exception as e:
+            print(e.args)
+            return response(400, "服务器内部异常")
+
+        if email not in current_app.config.get("SUPER_USER"):
+            return response(400, "非管理员账号请勿操作")
+
+        try:
+            _ = json.loads(request.get_data())
+            category = _.get('category')
+        except JSONDecodeError:
+            return response(400, "数据格式异常")
+
+        category = Category.query.filter_by(name=category).first()
+        if not category:
+            return response(200, "数据不存在")
+
+        db.session.delete(category)
+        db.session.commit()
+
+        return response(200, "删除成功")
