@@ -50,6 +50,8 @@ class BaseView(Resource):
             flag, msg = BaseView._token_decode(request.headers.get("Authorization"))
             if not flag:
                 return msg
+
+            kwargs["token_data"] = msg
             return f(*args, **kwargs)
 
         return inner

@@ -19,3 +19,7 @@
 1. 请务必配置`conf.settings.py`中的`SUPER_USER`字段哦~
 2. 安装依赖 `pip3 install -r requirments.txt`
 3. 脚本命令行启动 `python3 manage.py runserver`
+
+### 三、api接口文档
+
+- [点我查看](./docs/APIDocuments.md)

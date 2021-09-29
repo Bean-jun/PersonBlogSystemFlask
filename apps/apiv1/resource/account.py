@@ -62,7 +62,7 @@ class LoginView(BaseView):
         if not all([username, pwd]):
             return response(400, "账号信息不完整")
 
-        user = UserInfo.query.filter(or_(UserInfo.username==username, UserInfo.email==username)).first()
+        user = UserInfo.query.filter(or_(UserInfo.username == username, UserInfo.email == username)).first()
         if not user:
             return response(400, "账号不存在")
 
@@ -70,6 +70,44 @@ class LoginView(BaseView):
             return response(400, "账号密码有误")
 
         return response(200, "登录成功", {"username": user.username, "token": self.token_encode(
+            username=user.username,
+            email=user.email
+        )})
+
+
+class ModifyPassWord(BaseView):
+
+    def post(self):
+        try:
+            _ = json.loads(request.get_data())
+            username = _.get('username')
+            old_pwd = _.get("old_pwd")
+            pwd = _.get('pwd')
+            confirm_pwd = _.get('confirm_pwd')
+        except JSONDecodeError:
+            return response(400, "数据格式异常")
+
+        if not all([username, old_pwd, pwd, confirm_pwd]):
+            return response(400, "信息不完整")
+
+        if pwd != confirm_pwd:
+            return response(400, "新密码不一致")
+
+        user = UserInfo.query.filter(or_(UserInfo.username == username, UserInfo.email == username)).first()
+        if not user:
+            return response(400, "账号不存在")
+
+        if not user.check_password(old_pwd):
+            return response(400, "账号密码有误")
+
+        if user.check_password(pwd):
+            return response(400, "新密码不得与旧密码一致")
+
+        user.password = pwd
+        db.session.add(user)
+        db.session.commit()
+
+        return response(200, "修改成功", {"username": user.username, "token": self.token_encode(
             username=user.username,
             email=user.email
         )})
