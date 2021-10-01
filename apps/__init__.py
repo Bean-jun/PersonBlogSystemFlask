@@ -22,9 +22,13 @@ def create_app(config):
     # 初始化db
     db.init_app(app=app)
 
+    from middleware.auth import auth, custom_after_request
+
     # 创建请求中间件
-    from middleware.auth import auth
     app.before_request(auth)
+
+    # 全局响应处理(优先api)
+    app.after_request(custom_after_request)
 
     # 导入blog蓝图
     from apps.blog import home_blueprint  # fix: 修复循导入问题
