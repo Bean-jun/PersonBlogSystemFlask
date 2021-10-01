@@ -19,6 +19,7 @@ class Config(object):
     SUPER_USER = ADMIN_ACCOUNT  # ADMIN_ACCOUNT = ["xxx@gmail.com"]
     # 白名单-所有用户可以访问
     WHITE_LIST = ["", "login", "register", "detail", "api", "static", "list"]
+
     # 头像目录
     UPLOAD_FOLDER = "apps/blog/static/asset"
     # 默认注册默认头像
