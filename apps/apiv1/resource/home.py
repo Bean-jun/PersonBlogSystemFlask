@@ -2,11 +2,12 @@ import json
 from datetime import datetime
 from json import JSONDecodeError
 
-from flask import request, current_app
+from flask import request
+
 from apps import db
-from apps.apiv1.resource.Base import BaseView
-from apps.models import Note, UserInfo, Category
 from apps.apiv1.common.response import response
+from apps.apiv1.resource.Base import BaseView
+from apps.models import Note, Category
 
 
 class BlogListView(BaseView):
@@ -22,14 +23,6 @@ class BlogListView(BaseView):
     @BaseView.auth
     def post(self, *args, **kwargs):
         # 添加博客
-        try:
-            email = kwargs.get("token_data").get("data").get("email")
-        except Exception as e:
-            print(e.args)
-            return response(400, "服务器内部异常")
-
-        if email not in current_app.config.get("SUPER_USER"):
-            return response(400, "非管理员账号请勿操作")
 
         try:
             _ = json.loads(request.get_data())
@@ -51,9 +44,7 @@ class BlogListView(BaseView):
         if note:
             return response(400, "请不要重复添加")
 
-        user = UserInfo.query.filter_by(email=email).first()
-
-        _note = Note(user_id=user.id,
+        _note = Note(user_id=kwargs["user"].id,
                      category_id=category.id,
                      title=title,
                      content=content,
@@ -98,15 +89,6 @@ class BlogDetailView(BaseView):
         id = kwargs.get("id", None)
 
         try:
-            email = kwargs.get("token_data").get("data").get("email")
-        except Exception as e:
-            print(e.args)
-            return response(400, "服务器内部异常")
-
-        if email not in current_app.config.get("SUPER_USER"):
-            return response(400, "非管理员账号请勿操作")
-
-        try:
             _ = json.loads(request.get_data())
             category = _.get('category')
             content = _.get('content')
@@ -145,15 +127,6 @@ class BlogDetailView(BaseView):
         # 删除博客
 
         id = kwargs.get("id", None)
-
-        try:
-            email = kwargs.get("token_data").get("data").get("email")
-        except Exception as e:
-            print(e.args)
-            return response(400, "服务器内部异常")
-
-        if email not in current_app.config.get("SUPER_USER"):
-            return response(400, "非管理员账号请勿操作")
 
         Note.query.filter_by(id=id).delete()
         db.session.commit()

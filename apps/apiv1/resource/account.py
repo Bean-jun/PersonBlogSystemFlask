@@ -126,15 +126,6 @@ class AddCategory(BaseView):
     def post(self, *args, **kwargs):
 
         try:
-            email = kwargs.get("token_data").get("data").get("email")
-        except Exception as e:
-            print(e.args)
-            return response(400, "服务器内部异常")
-
-        if email not in current_app.config.get("SUPER_USER"):
-            return response(400, "非管理员账号请勿操作")
-
-        try:
             _ = json.loads(request.get_data())
             category = _.get('category')
         except JSONDecodeError:
@@ -144,9 +135,7 @@ class AddCategory(BaseView):
         if exist:
             return response(400, "请勿重复添加")
 
-        user = UserInfo.query.filter_by(email=email).first()
-
-        category = Category(user_id=user.id,
+        category = Category(user_id=kwargs["user"].id,
                             name=category)
 
         db.session.add(category)
@@ -156,15 +145,6 @@ class AddCategory(BaseView):
 
     @BaseView.auth
     def delete(self, *args, **kwargs):
-
-        try:
-            email = kwargs.get("token_data").get("data").get("email")
-        except Exception as e:
-            print(e.args)
-            return response(400, "服务器内部异常")
-
-        if email not in current_app.config.get("SUPER_USER"):
-            return response(400, "非管理员账号请勿操作")
 
         try:
             _ = json.loads(request.get_data())

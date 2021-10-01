@@ -1,10 +1,12 @@
 import datetime
 from functools import wraps
-import jwt
 
-from flask_restful import Resource
+import jwt
 from flask import request, current_app
+from flask_restful import Resource
+
 from apps.apiv1.common.response import response
+from apps.models import UserInfo
 
 
 class BaseView(Resource):
@@ -32,7 +34,7 @@ class BaseView(Resource):
     def _token_decode(token):
         try:
             msg_dict = jwt.decode(token, current_app.config.get("SECRET_KEY"), algorithms="HS256",
-                                  options= {'verify_exp':True})
+                                  options={'verify_exp': True})
         except jwt.exceptions.ExpiredSignatureError:
             return False, response(400, "认证已过期")
         except jwt.exceptions.InvalidSignatureError:
@@ -51,7 +53,18 @@ class BaseView(Resource):
             if not flag:
                 return msg
 
-            kwargs["token_data"] = msg
+            # 非管理员无法操作
+            try:
+                email = msg.get("data").get("email")
+            except Exception as e:
+                return response(400, "服务器内部异常")
+
+            if email not in current_app.config.get("SUPER_USER"):
+                return response(400, "非管理员账号请勿操作")
+
+            user = UserInfo.query.filter_by(email=email).first()
+            kwargs["user"] = user
+
             return f(*args, **kwargs)
 
         return inner
