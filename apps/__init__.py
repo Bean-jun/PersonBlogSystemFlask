@@ -30,4 +30,8 @@ def create_app(config):
     from apps.blog import home_blueprint  # fix: 修复循导入问题
     app.register_blueprint(home_blueprint, url_prefix="")
 
+    # 处理api
+    from apps.apiv1 import api_blueprint
+    app.register_blueprint(api_blueprint, url_prefix="/api/v1")
+
     return app

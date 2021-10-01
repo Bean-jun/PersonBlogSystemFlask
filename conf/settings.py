@@ -18,7 +18,8 @@ class Config(object):
     # 管理员
     SUPER_USER = ADMIN_ACCOUNT  # ADMIN_ACCOUNT = ["xxx@gmail.com"]
     # 白名单-所有用户可以访问
-    WHITE_LIST = ["", "login", "register", "detail", "list", "static"]
+    WHITE_LIST = ["", "login", "register", "detail", "api", "static", "list"]
+
     # 头像目录
     UPLOAD_FOLDER = "apps/blog/static/asset"
     # 默认注册默认头像
@@ -26,6 +27,9 @@ class Config(object):
 
     # top_image目录
     TOP_IMAGE_UPLOAD_FOLDER = "apps/blog/static/asset/top_image"
+
+    # token 过期时间 (单位：秒)
+    TOKEN_EXP = 60 * 60
 
 
 class DevelopConfig(Config):
