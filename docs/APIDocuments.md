@@ -74,7 +74,38 @@
 
 ### 二、博客
 
-1. 添加博客分类 `/blogCategory`	POST
+1. 获取博客分类列表 `/blogCategory` GET
+
+   响应数据格式
+
+   ```json
+   {
+       "code": 200,
+       "message": "获取成功",
+       "data": [
+           {
+               "id": 2,
+               "name": "python"
+           },
+           {
+               "id": 3,
+               "name": "java"
+           },
+           {
+               "id": 9,
+               "name": "abc"
+           },
+           {
+               "id": 10,
+               "name": "abcasd"
+           }
+       ]
+   }
+   ```
+
+   
+
+2. 添加博客分类 `/blogCategory`	POST
 
    | token    | 请放在请求头中 |
    | -------- | -------------- |
@@ -95,7 +126,7 @@
 
    
 
-2. 删除博客分类 `/blogCategory`  DELETE
+3. 删除博客分类 `/blogCategory`  DELETE
 
    | token    | 请放在请求头中 |
    | -------- | -------------- |
@@ -119,12 +150,118 @@
 
    
 
-3. 获取博客列表
+4. 获取博客列表 `/blog` GET
 
-4. 添加博客
+   ```json
+   {
+       "code": 200,
+       "message": "获取成功",
+       "data": [
+           {
+               "id": 5,
+               "title": "python入门到入土"
+           },
+           {
+               "id": 40,
+               "title": "golang"
+           }
+       ]
+   }
+   ```
 
-5. 获取单条博客
+   
 
-6. 修改单条博客
+5. 添加博客`/blog` POST
 
-7. 删除单条博客
+   | token     | 请放在请求头中 |      |
+   | --------- | -------------- | ---- |
+   | category  | 博客分类       |      |
+   | title     | 博客标题       |      |
+   | content   | 博客内容       |      |
+   | top_image | 博客首页头像   |      |
+
+   响应数据格式
+
+   ```json
+   {
+       "code": 200,
+       "message": "添加成功",
+       "data": {
+           "categoryId": 51,
+           "category": "python入门到入土",
+           "titleId": 51,
+           "title": "小白编程5",
+           "content": "adsfasdfasdg",
+           "top_image": "https://images.cnblogs.com/cnblogs_com/xujunkai/1927362/o_210203025041微信图片_20210203104952.jpg"
+       }
+   }
+   ```
+
+   
+
+6. 获取单条博客 `/blog/<int:id>` GET
+
+   响应数据格式
+
+   ```json
+   {
+       "code": 200,
+       "message": "获取成功",
+       "data": {
+           "categoryId": 47,
+           "category": "python入门到入土",
+           "titleId": 47,
+           "title": "小白编程",
+           "content": "adsfasdfasdg",
+           "top_image": "https://images.cnblogs.com/cnblogs_com/xujunkai/1927362/o_210203025041微信图片_20210203104952.jpg"
+       }
+   }
+   ```
+
+   
+
+7. 修改单条博客`/blog/<int:id>` PUT
+
+   | token     | 请放在请求头中 |      |
+   | --------- | -------------- | ---- |
+   | category  | 博客分类       |      |
+   | title     | 博客标题       |      |
+   | content   | 博客内容       |      |
+   | top_image | 博客首页头像   |      |
+
+   响应数据格式
+
+   ```json
+   {
+       "code": 200,
+       "message": "修改成功",
+       "data": {
+           "categoryId": 47,
+           "category": "python入门到入土",
+           "titleId": 47,
+           "title": "小白编程abcd",
+           "content": "adsfasdfasdg",
+           "top_image": "https://images.cnblogs.com/cnblogs_com/xujunkai/1927362/o_210203025041微信图片_20210203104952.jpg"
+       }
+   }
+   ```
+
+   
+
+8. 删除单条博客`/blog/<int:id>` DELETE
+
+   | token | 请放在请求头中 |      |
+   | ----- | -------------- | ---- |
+
+   响应数据格式
+
+   ```json
+   {
+       "code": 200,
+       "message": "删除成功",
+       "data": ""
+   }
+   ```
+
+   
+

@@ -7,7 +7,7 @@ from sqlalchemy import or_
 from apps import db
 from apps.apiv1.common.response import response
 from apps.apiv1.resource.Base import BaseView
-from apps.models import UserInfo, Category
+from apps.models import UserInfo, Category, Note
 
 
 class RegisterView(BaseView):
@@ -115,6 +115,13 @@ class ModifyPassWord(BaseView):
 
 class AddCategory(BaseView):
 
+    def get(self, *args, **kwargs):
+        all_category = Category.query.all()
+        category = []
+        for c in all_category:
+            category.append({"id": c.id, "name": c.name})
+        return response(200, "获取成功", category)
+
     @BaseView.auth
     def post(self, *args, **kwargs):
 
@@ -168,6 +175,9 @@ class AddCategory(BaseView):
         category = Category.query.filter_by(name=category).first()
         if not category:
             return response(200, "数据不存在")
+
+        # 删除该分类对应的note
+        Note.query.filter_by(category_id=category.id).delete()
 
         db.session.delete(category)
         db.session.commit()
