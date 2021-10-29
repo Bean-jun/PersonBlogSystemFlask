@@ -14,6 +14,8 @@
 
 2. 博客不再支持语雀同步
 
+3. 更新oauth授权，但是这里的授权没有使用微博的oauth授权，而是采用自定制oauth系统，关于本系统有兴趣的小伙伴请点击查看[这里](https://github.com/Bean-jun/AuthSystem.git)
+
 ### 二、 使用方式
 
 1. 请务必配置`conf.settings.py`中的`SUPER_USER`字段哦~
