@@ -1,5 +1,7 @@
 import os
 import uuid
+
+import requests as requests
 from flask import request, redirect, url_for, session, flash
 from flask import render_template, jsonify
 from flask.views import MethodView
@@ -12,7 +14,16 @@ class LoginView(MethodView):
     """用户登录"""
 
     def get(self):
-        return render_template("login.html")
+        # oauth授权使用时操作
+        try:
+            develop_secret_id = current_app.config.get("DEVELOP_SECRET_ID")
+            redirect_uri = current_app.config.get("LOCALHOST_ADDRESS")
+            host = current_app.config.get("OAUTH_HOST_ADDRESS")
+            url = f"{host}?secret_id={develop_secret_id}&redirect_uri={redirect_uri}"
+        except Exception as e:
+            url = ""
+
+        return render_template("login.html", **{"login": url})
 
     def post(self):
         _ = request.form
@@ -35,6 +46,52 @@ class LoginView(MethodView):
 
         session['id'] = user.id
         return redirect(url_for("blog.index"))
+
+
+class OauthView(MethodView):
+    """自定义oauth授权处理"""
+
+    def get(self):
+        code = request.args.get("authorization_code")
+        if not code:
+            return redirect(url_for("blog.login"))
+
+        develop_secret_id = current_app.config.get("DEVELOP_SECRET_ID")
+        develop_secret_value = current_app.config.get("DEVELOP_SECRET_VALUE")
+        host = current_app.config.get("OAUTH_HOST_ADDRESS")
+
+        data = {
+            "secret_id": develop_secret_id,
+            "secret_value": develop_secret_value,
+            "authorization_code": code
+        }
+
+        response = requests.post(host, data)
+
+        if response.status_code == 200:
+            data = response.json()
+
+            username = data.get("data").get("username")
+            email = data.get("data").get("email")
+
+            user = UserInfo.query.filter_by(email=email).first()
+
+            if user:
+                session['id'] = user.id
+                return redirect(url_for("blog.index"))
+
+            new_user = UserInfo(username=username,
+                                email=email)
+
+            new_user.image = current_app.config.get("USER_LOGO", None)
+            new_user.password = "oauth"
+            db.session.add(new_user)
+            db.session.commit()
+
+            session['id'] = new_user.id
+            return redirect(url_for("blog.index"))
+
+        return redirect(url_for("blog.register"))
 
 
 class RegisterView(MethodView):
@@ -153,6 +210,7 @@ class ModifyPassWdView(MethodView):
 
 class AddCategory(MethodView):
     """添加博客分类"""
+
     def post(self):
         r = request.form.get("category", None)
         if not r:
