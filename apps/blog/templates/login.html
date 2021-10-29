@@ -23,7 +23,9 @@
                 {{ get_flashed_messages()[0] }}
                 {% endif %}
             </p>
-
+            <a href={{ login }}>
+                <button type="button" class="btn btn-default" style="float: right; margin-left: 20px">oauth授权</button>
+            </a>
             <button type="submit" class="btn btn-default" style="float: right">登 录</button>
         </form>
     </div>

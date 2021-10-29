@@ -18,7 +18,7 @@ class Config(object):
     # 管理员
     SUPER_USER = ADMIN_ACCOUNT  # ADMIN_ACCOUNT = ["xxx@gmail.com"]
     # 白名单-所有用户可以访问
-    WHITE_LIST = ["", "login", "register", "detail", "api", "static", "list"]
+    WHITE_LIST = ["", "login", "register", "detail", "api", "static", "list", "oauth"]
 
     # 头像目录
     UPLOAD_FOLDER = "apps/blog/static/asset"
@@ -30,6 +30,16 @@ class Config(object):
 
     # token 过期时间 (单位：秒)
     TOKEN_EXP = 60 * 60
+
+    # 开发者id及秘钥
+    DEVELOP_SECRET_ID = develop_secret_id
+    DEVELOP_SECRET_VALUE = develop_secret_value
+
+    # 主机地址
+    LOCALHOST_ADDRESS = "http://127.0.0.1:5000/oauth"
+
+    # oauth主机地址
+    OAUTH_HOST_ADDRESS = oauth_host_address
 
 
 class DevelopConfig(Config):
